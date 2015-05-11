@@ -10,16 +10,21 @@ class RedactorRails::PicturesController < ApplicationController
   def create
     @picture = RedactorRails.picture_model.new
 
+    p "-------------"
+
     file = params[:file]
     @picture.data = RedactorRails::Http.normalize_param(file, request)
     if @picture.has_attribute?(:"#{RedactorRails.devise_user_key}")
+      p 'uuuuuuuu'
       @picture.send("#{RedactorRails.devise_user}=", redactor_current_user)
       @picture.assetable = redactor_current_user
     end
 
     if @picture.save
+      p "ssssssssss"
       render :text => { :file_path => @picture.url }.to_json
     else
+      p "eeeeeeeeeee"
       render json: { error: @picture.errors }
     end
   end
